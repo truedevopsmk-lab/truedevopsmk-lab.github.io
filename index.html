@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Muthukumar Sambandam | DevOps & SRE Portfolio</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111111;
+      --card: #f4f4f4;
+      --accent: #0d6efd;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0d1117;
+      --text: #c9d1d9;
+      --card: #161b22;
+      --accent: #58a6ff;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      background: var(--card);
+      position: sticky;
+      top: 0;
+    }
+
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: bold;
+    }
+
+    .toggle-btn {
+      padding: 8px 14px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .project-card {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 4px solid var(--accent);
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      margin-top: 40px;
+      background: var(--card);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Muthukumar Sambandam</h1>
+    <p>Senior Site Reliability Engineer | DevOps | Cloud | Automation</p>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="toggle-btn" onclick="toggleTheme()">Toggle Dark Mode</button>
+  </header>
+
+  <div class="container">
+    <section id="about" class="card">
+      <h2>About Me</h2>
+      <img src="https://avatars.githubusercontent.com/u/183137947?v=4" alt="Muthukumar Sambandam" style="width:140px;height:140px;border-radius:50%;margin-bottom:15px;" />
+      <p>
+        Hi, I'm <strong>Muthukumar Sambandam</strong>, a Senior Site Reliability Engineer passionate about
+        building scalable systems, cloud automation, and DevOps engineering. I work extensively with
+        Kubernetes, GitOps, CI/CD, Observability, and Site Reliability practices. I also enjoy applying AI
+        tooling to engineering workflows for boosting developer productivity.
+      </p>
+    </section>
+
+    <section id="skills" class="card">
+      <h2>Skills</h2>
+      <ul>
+        <li>Cloud: AWS, GCP</li>
+        <li>Kubernetes, ArgoCD, Crossplane, Helm</li>
+        <li>Terraform, Pulumi, GitOps</li>
+        <li>Monitoring: Prometheus, Grafana, Loki, Datadog</li>
+        <li>CI/CD: GitHub Actions, Jenkins</li>
+        <li>Scripting: Python, Bash</li>
+      </ul>
+    </section>
+
+    <section id="projects" class="card">
+      <h2>Projects</h2>
+      <div id="repo-list" class="projects-grid">
+        <!-- GitHub API injected projects will load here -->
+      </div>
+    </section>
+
+    <script>
+      async function loadRepos() {
+        const response = await fetch('https://api.github.com/users/truedevopsmk-lab/repos');
+        const repos = await response.json();
+
+        const container = document.getElementById('repo-list');
+        container.innerHTML = '';
+
+        repos.forEach(repo => {
+          const card = document.createElement('div');
+          card.className = 'project-card';
+          card.innerHTML = `
+            <h3>${repo.name}</h3>
+            <p>${repo.description || 'No description available.'}</p>
+            <a href="${repo.html_url}" target="_blank">View on GitHub</a>
+          `;
+          container.appendChild(card);
+        });
+      }
+
+      loadRepos();
+    </script>
+
+    <section id="contact" class="card">
+      <h2>Contact</h2>
+      <p>Email: muthukumar@domain.com</p>
+      <p>GitHub: github.com/truedevopsmk-lab</p>
+      <p>LinkedIn: linkedin.com/in/muthukumar</p>
+    </section>
+  </div>
+
+  <footer>
+    <p>© 2025 Muthukumar Sambandam</p>
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute("data-theme");
+      document.documentElement.setAttribute(
+        "data-theme",
+        current === "dark" ? "light" : "dark"
+      );
+    }
+  </script>
+</body>
+</html>
