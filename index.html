@@ -1,7 +1,237 @@
-<div class="repo">
-  <strong>flight-tracker</strong><br>
-  🔗 <a href="https://github.com/truedevopsmk-lab/flight-tracker">GitHub Repo</a><br>
-  🌐 <a href="https://truedevopsmk-lab.github.io/flight-tracker/">Live Webpage</a>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Muthukumar S | DevOps & SRE Portfolio</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111111;
+      --card: #f4f4f4;
+      --accent: #0d6efd;
+    }
 
+    [data-theme="dark"] {
+      --bg: #0d1117;
+      --text: #c9d1d9;
+      --card: #161b22;
+      --accent: #58a6ff;
+    }
 
+    body {
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      background: var(--card);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: bold;
+    }
+
+    .toggle-btn {
+      padding: 8px 14px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .project-card {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 4px solid var(--accent);
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      margin-top: 40px;
+      background: var(--card);
+    }
+
+    .muted { color: #666; font-size: 0.95rem; }
+    .error { color: #b00020; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Muthukumar S</h1>
+    <p>Senior Site Reliability Engineer | DevOps | Cloud | Automation</p>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="toggle-btn" onclick="toggleTheme()">Toggle Dark Mode</button>
+  </header>
+
+  <div class="container">
+    <!-- ABOUT -->
+    <section id="about" class="card">
+      <h2>About Me</h2>
+      <img id="profile-pic"
+        src="https://github.com/truedevopsmk-lab.png"
+        alt="Muthukumar S"
+        style="width:140px;height:140px;border-radius:50%;margin-bottom:15px;" />
+      <p>
+        Hi, I'm <strong>Muthukumar S</strong>, a Senior Site Reliability Engineer passionate about
+        building scalable systems, cloud automation, and DevOps engineering. I work extensively with
+        Kubernetes, GitOps, CI/CD, Observability, and Site Reliability practices. I also enjoy applying AI
+        tooling to engineering workflows for boosting developer productivity.
+      </p>
+      <p class="muted">Note: if your profile picture was recently updated it may take a few minutes to propagate to caches.</p>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="card">
+      <h2>Skills</h2>
+      <ul>
+        <li>Cloud: AWS, GCP</li>
+        <li>Kubernetes, ArgoCD, Crossplane, Helm</li>
+        <li>Terraform, Pulumi, GitOps</li>
+        <li>Monitoring: Prometheus, Grafana, Loki, Datadog</li>
+        <li>CI/CD: GitHub Actions, Jenkins</li>
+        <li>Scripting: Python, Bash</li>
+      </ul>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="card">
+      <h2>Projects</h2>
+      <div id="repo-list" class="projects-grid">
+        <div class="muted">Loading repositories...</div>
+      </div>
+      <div id="repo-error" class="muted" style="margin-top:12px; display:none;"></div>
+    </section>
+
+    <script>
+      async function loadRepos() {
+        const container = document.getElementById('repo-list');
+        const errorNode = document.getElementById('repo-error');
+        container.innerHTML = '';
+        errorNode.style.display = 'none';
+
+        const endpoint = 'https://api.github.com/users/truedevopsmk-lab/repos?per_page=100&sort=updated';
+
+        try {
+          const response = await fetch(endpoint, { cache: 'no-store' });
+          if (!response.ok) throw new Error('API error: ' + response.status);
+
+          const repos = await response.json();
+          if (!Array.isArray(repos) || repos.length === 0) {
+            container.innerHTML = '<div class="muted">No public repositories found.</div>';
+            return;
+          }
+
+          repos.forEach(repo => {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+
+            // Detect GitHub Pages availability
+            const pagesUrl = `https://truedevopsmk-lab.github.io/${repo.name}/`;
+            const liveLink = repo.has_pages
+              ? `<br>🌐 <a href="${pagesUrl}" target="_blank">Live Webpage</a>`
+              : '';
+
+            card.innerHTML = `
+              <h3>${repo.name}</h3>
+              <p>${repo.description || 'No description available.'}</p>
+              <p class="muted">⭐ ${repo.stargazers_count} • 🍴 ${repo.forks_count} • ${repo.language || '—'}</p>
+              🔗 <a href="${repo.html_url}" target="_blank">View on GitHub</a>
+              ${liveLink}
+            `;
+
+            container.appendChild(card);
+          });
+
+        } catch (err) {
+          console.error(err);
+          errorNode.style.display = 'block';
+          errorNode.className = 'error';
+          errorNode.textContent = 'Could not load repositories. Showing fallback list.';
+
+          const fallback = [
+            { name: 'devops-lab', description: 'CI/CD + Kubernetes lab (fallback)', html_url: 'https://github.com/truedevopsmk-lab/devops-lab', stargazers_count: 0, forks_count: 0, language: 'Shell' },
+            { name: 'sre-toolkit', description: 'Incident response automation scripts (fallback)', html_url: 'https://github.com/truedevopsmk-lab/sre-toolkit', stargazers_count: 0, forks_count: 0, language: 'Python' },
+            { name: 'cloud-cost-optimizer', description: 'Cost spike detection utility (fallback)', html_url: 'https://github.com/truedevopsmk-lab/cloud-cost-optimizer', stargazers_count: 0, forks_count: 0, language: 'Go' }
+          ];
+
+          container.innerHTML = '';
+          fallback.forEach(repo => {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+            card.innerHTML = `
+              <h3>${repo.name}</h3>
+              <p>${repo.description}</p>
+              <p class="muted">⭐ ${repo.stargazers_count} • 🍴 ${repo.forks_count} • ${repo.language}</p>
+              <a href="${repo.html_url}" target="_blank">View on GitHub</a>
+            `;
+            container.appendChild(card);
+          });
+        }
+      }
+
+      loadRepos();
+    </script>
+
+    <!-- CONTACT -->
+    <section id="contact" class="card">
+      <h2>Contact</h2>
+      <p>Email: muthukumar@domain.com</p>
+      <p>GitHub: <a href="https://github.com/truedevopsmk-lab" target="_blank">github.com/truedevopsmk-lab</a></p>
+      <p>LinkedIn: <a href="https://linkedin.com/in/muthukumar" target="_blank">linkedin.com/in/muthukumar</a></p>
+    </section>
+  </div>
+
+  <footer>
+    <p>© 2025 Muthukumar S</p>
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute("data-theme") || 'light';
+      document.documentElement.setAttribute(
+        "data-theme",
+        current === "dark" ? "light" : "dark"
+      );
+    }
+  </script>
+</body>
+</html>
